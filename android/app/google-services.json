@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "254669856824",
+    "firebase_url": "https://lista-de-compras-674a8.firebaseio.com",
+    "project_id": "lista-de-compras-674a8",
+    "storage_bucket": "lista-de-compras-674a8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254669856824:android:a95839786467894273c6cd",
+        "android_client_info": {
+          "package_name": "br.com.gpneto.cdma31"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254669856824-srnemgr2d5rg1cq06a0tvl7vfehjjhu6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0798QV3ncCOTVU8VpRdNz8F6Qv3e6itI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254669856824-srnemgr2d5rg1cq06a0tvl7vfehjjhu6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "254669856824-m8r97bq2ddmkh3qdf8dd7892hr8b3fq6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "br.com.gpneto.cdma31"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254669856824:android:91cd31f4772539b473c6cd",
+        "android_client_info": {
+          "package_name": "br.com.gpneto.listacompras"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254669856824-srnemgr2d5rg1cq06a0tvl7vfehjjhu6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0798QV3ncCOTVU8VpRdNz8F6Qv3e6itI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254669856824-srnemgr2d5rg1cq06a0tvl7vfehjjhu6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "254669856824-m8r97bq2ddmkh3qdf8dd7892hr8b3fq6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "br.com.gpneto.cdma31"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
