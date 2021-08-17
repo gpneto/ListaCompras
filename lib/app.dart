@@ -8,6 +8,7 @@ import 'package:flutter/material.dart' hide Action;
 import 'package:fish_redux/fish_redux.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:lista_compras/routes/routes.dart';
+import 'package:lista_compras/widgets/CustomColors.dart';
 import 'package:lista_compras/widgets/prefs.dart';
 import 'package:lista_compras/widgets/target_platform_native.dart';
 
@@ -36,10 +37,15 @@ class _AppState extends State<App> {
 
   final AbstractRoutes routes = Routes.routes;
   final ThemeData _lightTheme =
-      ThemeData.light().copyWith(accentColor: Colors.transparent, primaryColor: Color(
-          0xFFF8F8F8));
+      ThemeData.light().copyWith(accentColor: Colors.transparent,
+          canvasColor: CustomColors.GreyBackground,primaryColor: Color(
+          0xFFF8F8F8),    textTheme: ThemeData.light().textTheme.apply(
+            fontFamily: 'rubik',
+          ));
   final ThemeData _darkTheme =
-      ThemeData.dark().copyWith(accentColor: Colors.transparent);
+      ThemeData.dark().copyWith(accentColor: Colors.transparent,   textTheme: ThemeData.dark().textTheme.apply(
+        fontFamily: 'rubik',
+      ));
   final FirebaseAnalytics analytics = FirebaseAnalytics();
 
   Future _init() async {

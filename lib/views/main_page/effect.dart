@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fish_redux/fish_redux.dart';
 import 'package:flutter/material.dart' hide Action, Page;
@@ -24,6 +25,7 @@ ReceivePort _port = ReceivePort();
 void _onAction(Action action, Context<MainPageState> ctx) {}
 
 void _onInit(Action action, Context<MainPageState> ctx) async {
+
   final _preferences = await SharedPreferences.getInstance();
 
   final _localNotification = LocalNotification.instance;

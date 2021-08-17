@@ -13,10 +13,8 @@ import 'package:toast/toast.dart';
 
 import 'action.dart';
 import 'state.dart';
-
 Widget buildView(
     LoginPageState state, Dispatch dispatch, ViewService viewService) {
-  Adapt.initContext(viewService.context);
   return Scaffold(
     resizeToAvoidBottomInset: false,
     body: Stack(
@@ -25,6 +23,14 @@ Widget buildView(
         _LoginBody(
           animationController: state.animationController,
           submitAnimationController: state.submitAnimationController,
+          emailLogin: state.emailLogin,
+          accountFocusNode: state.accountFocusNode,
+          pwdFocusNode: state.pwdFocusNode,
+          accountTextController: state.accountTextController,
+          passWordTextController: state.passWordTextController,
+          phoneTextController: state.phoneTextController,
+          codeTextContraller: state.codeTextContraller,
+          countryCode: state.countryCode,
           dispatch: dispatch,
         ),
         _AppBar(),
@@ -52,7 +58,7 @@ class _BackGround extends StatelessWidget {
                 color: Colors.black87,
                 image: DecorationImage(
                     colorFilter:
-                        ColorFilter.mode(Colors.black, BlendMode.color),
+                    ColorFilter.mode(Colors.black, BlendMode.color),
                     fit: BoxFit.cover,
                     image: CachedNetworkImageProvider(
                         'https://image.tmdb.org/t/p/original/mAkPFEWkwKz9nmKyCiuETfTdpgX.jpg'))),
@@ -119,6 +125,98 @@ class _AppBar extends StatelessWidget {
   }
 }
 
+class _EmailEntry extends StatelessWidget {
+  final AnimationController controller;
+  final TextEditingController accountTextController;
+  final TextEditingController passWordTextController;
+  final FocusNode accountFocusNode;
+  final FocusNode pwdFocusNode;
+  final Function(String) onSubmit;
+  const _EmailEntry(
+      {this.controller,
+        this.accountFocusNode,
+        this.pwdFocusNode,
+        this.accountTextController,
+        this.passWordTextController,
+        this.onSubmit});
+  @override
+  Widget build(BuildContext context) {
+    final accountCurve = CurvedAnimation(
+      parent: controller,
+      curve: Interval(
+        0.3,
+        0.5,
+        curve: Curves.ease,
+      ),
+    );
+    final passwordCurve = CurvedAnimation(
+      parent: controller,
+      curve: Interval(
+        0.4,
+        0.6,
+        curve: Curves.ease,
+      ),
+    );
+    final _theme = ThemeStyle.getTheme(context);
+
+    return Column(children: [
+      SlideTransition(
+        position:
+        Tween(begin: Offset(0, 1), end: Offset.zero).animate(accountCurve),
+        child: FadeTransition(
+            opacity: Tween(begin: 0.0, end: 1.0).animate(accountCurve),
+            child: Padding(
+              padding: EdgeInsets.all(Adapt.px(40)),
+              child: TextField(
+                focusNode: accountFocusNode,
+                controller: accountTextController,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                style: TextStyle(fontSize: Adapt.px(35)),
+                cursorColor: _theme.iconTheme.color,
+                decoration: InputDecoration(
+                    fillColor: Colors.transparent,
+                    hintText: 'E-mail',
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    filled: true,
+                    prefixStyle: TextStyle(fontSize: Adapt.px(35)),
+                    focusedBorder: new UnderlineInputBorder(
+                        borderSide: new BorderSide(color: Colors.black87))),
+                onSubmitted: (s) {
+                  accountFocusNode.nextFocus();
+                },
+              ),
+            )),
+      ),
+      SlideTransition(
+        position:
+        Tween(begin: Offset(0, 1), end: Offset.zero).animate(passwordCurve),
+        child: FadeTransition(
+          opacity: Tween(begin: 0.0, end: 1.0).animate(passwordCurve),
+          child: Padding(
+            padding: EdgeInsets.all(Adapt.px(40)),
+            child: TextField(
+              focusNode: pwdFocusNode,
+              controller: passWordTextController,
+              style: TextStyle(fontSize: Adapt.px(35)),
+              cursorColor: _theme.iconTheme.color,
+              obscureText: true,
+              decoration: InputDecoration(
+                  fillColor: Colors.transparent,
+                  hintText: 'Senha',
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
+                  filled: true,
+                  prefixStyle: TextStyle(fontSize: Adapt.px(35)),
+                  focusedBorder: new UnderlineInputBorder(
+                      borderSide: new BorderSide(color: Colors.black87))),
+              onSubmitted: onSubmit,
+            ),
+          ),
+        ),
+      ),
+    ]);
+  }
+}
 
 class _SubmitButton extends StatelessWidget {
   final AnimationController controller;
@@ -163,7 +261,7 @@ class _SubmitButton extends StatelessWidget {
                       borderRadius: BorderRadius.circular(Adapt.px(50)),
                     ),
                   ),
-                  child: Text('Sign In',
+                  child: Text('Acessar',
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: Tween<double>(begin: Adapt.px(35), end: 0.0)
@@ -197,13 +295,26 @@ class _LoginBody extends StatelessWidget {
   final Dispatch dispatch;
   final AnimationController animationController;
   final AnimationController submitAnimationController;
-
+  final TextEditingController phoneTextController;
+  final TextEditingController codeTextContraller;
+  final TextEditingController accountTextController;
+  final TextEditingController passWordTextController;
+  final FocusNode accountFocusNode;
+  final FocusNode pwdFocusNode;
+  final String countryCode;
+  final bool emailLogin;
   const _LoginBody(
-      {
-      this.animationController,
-      this.dispatch,
-      this.submitAnimationController,
-    });
+      {this.accountFocusNode,
+        this.accountTextController,
+        this.animationController,
+        this.codeTextContraller,
+        this.dispatch,
+        this.emailLogin,
+        this.passWordTextController,
+        this.phoneTextController,
+        this.pwdFocusNode,
+        this.submitAnimationController,
+        this.countryCode});
   @override
   Widget build(BuildContext context) {
     final cardCurve = CurvedAnimation(
@@ -226,15 +337,27 @@ class _LoginBody extends StatelessWidget {
     return Center(
       child: SlideTransition(
         position:
-            Tween(begin: Offset(0, 1), end: Offset.zero).animate(cardCurve),
+        Tween(begin: Offset(0, 1), end: Offset.zero).animate(cardCurve),
         child: Card(
           elevation: 10,
           child: Container(
-            height: Adapt.screenH() / 2,
+            height: Adapt.screenH() / 1.8,
             width: Adapt.screenW() * 0.9,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                AnimatedSwitcher(
+                  duration: Duration(milliseconds: 300),
+                  child: _EmailEntry(
+                    onSubmit: (s) =>
+                        dispatch(LoginPageActionCreator.onLoginClicked()),
+                    controller: animationController,
+                    accountFocusNode: accountFocusNode,
+                    pwdFocusNode: pwdFocusNode,
+                    accountTextController: accountTextController,
+                    passWordTextController: passWordTextController,
+                  ),
+                ),
                 SlideTransition(
                     position: Tween(begin: Offset(0, 1), end: Offset.zero)
                         .animate(submitCurve),
@@ -246,13 +369,35 @@ class _LoginBody extends StatelessWidget {
                             dispatch(LoginPageActionCreator.onLoginClicked()),
                       ),
                     )),
-
                 Container(
-                  alignment: Alignment.center,
+                    padding: EdgeInsets.fromLTRB(
+                        Adapt.px(50), Adapt.px(20), Adapt.px(50), Adapt.px(20)),
+                    alignment: Alignment.centerRight,
+                    child: FadeTransition(
+                      opacity:
+                      Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+                        parent: animationController,
+                        curve: Interval(
+                          0.7,
+                          1.0,
+                          curve: Curves.ease,
+                        ),
+                      )),
+                      child: GestureDetector(
+                        onTap: () =>
+                            dispatch(LoginPageActionCreator.onSignUp()),
+                        child: Text(
+                          'Criar conta',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ),
+                    )),
+                Container(
+                  alignment: Alignment.bottomRight,
                   height: Adapt.px(120),
                   child: FadeTransition(
                     opacity:
-                        Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+                    Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
                       parent: animationController,
                       curve: Interval(
                         0.7,
@@ -260,11 +405,9 @@ class _LoginBody extends StatelessWidget {
                         curve: Curves.ease,
                       ),
                     )),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-
-                        SizedBox(width: Adapt.px(20)),
                         InkWell(
                           onTap: () =>
                               dispatch(LoginPageActionCreator.onGoogleSignIn()),
@@ -274,15 +417,11 @@ class _LoginBody extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: Adapt.px(20)),
-                  InkWell(
-                    onTap: () =>
-                        dispatch(LoginPageActionCreator.onAppleSignIn()),
-                    child: Icon(
+                        Icon(
                           FontAwesomeIcons.facebook,
                           color: Colors.blue[700],
                           size: Adapt.px(45),
                         ),
-                  ),
                         SizedBox(width: Adapt.px(50)),
                       ],
                     ),

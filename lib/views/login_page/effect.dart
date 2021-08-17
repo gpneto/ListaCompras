@@ -7,8 +7,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fish_redux/fish_redux.dart';
 import 'package:flutter/widgets.dart' hide Action;
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:lista_compras/actions/pop_result.dart';
 import 'package:lista_compras/actions/user_info_operate.dart';
+import 'package:lista_compras/data/FirebaseServiceDados.dart';
 import 'package:lista_compras/routes/routes.dart';
+import 'package:lista_compras/views/register_page/page.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'action.dart';
 import 'state.dart';
@@ -66,27 +69,19 @@ void _onDispose(Action action, Context<LoginPageState> ctx) {
 void _onAction(Action action, Context<LoginPageState> ctx) {}
 
 Future _onLoginClicked(Action action, Context<LoginPageState> ctx) async {
-  // UserCredential _result;
-  // ctx.state.submitAnimationController.forward();
-  // if (ctx.state.emailLogin)
-  //   _result = await _emailSignIn(action, ctx);
-  //
-  // if (_result?.user == null) {
-  //   Toast.show("Account verification required", ctx.context,
-  //       duration: 3, gravity: Toast.BOTTOM);
-  //   ctx.state.submitAnimationController.reverse();
-  // } else {
-  //   var user = _result?.user;
-  //   var _nickName = user.displayName ??
-  //       user.phoneNumber.substring(user.phoneNumber.length - 4);
-  //
-  //   if (user.displayName == null)
-  //     user
-  //         .updateProfile(UserUpdateInfo()..displayName = _nickName)
-  //         .then((v) => UserInfoOperate.whenLogin(user, _nickName));
-  //   UserInfoOperate.whenLogin(user, _nickName);
-  //   Navigator.of(ctx.context).pop({'s': true, 'name': _nickName});
-  // }
+  UserCredential _result;
+  ctx.state.submitAnimationController.forward();
+  if (ctx.state.emailLogin)
+    _result = await _emailSignIn(action, ctx);
+
+  if (_result?.user == null) {
+    Toast.show("Account verification required", ctx.context,
+        duration: 3, gravity: Toast.BOTTOM);
+    ctx.state.submitAnimationController.reverse();
+  } else {
+    var user = _result?.user;
+    _onCompleteLogin(ctx, _auth.currentUser);
+  }
 }
 
 Future<UserCredential> _emailSignIn(
@@ -108,19 +103,23 @@ Future<UserCredential> _emailSignIn(
 
 
 Future _onSignUp(Action action, Context<LoginPageState> ctx) async {
-  // Navigator.of(ctx.context)
-  //     .push(PageRouteBuilder(pageBuilder: (context, an, _) {
-  //   return FadeTransition(
-  //     opacity: an,
-  //     child: RegisterPage().buildPage(null),
-  //   );
-  // })).then((results) {
-  //   // if (results is PopWithResults) {
-  //   //   PopWithResults popResult = results;
-  //   //   if (popResult.toPage == 'mainpage')
-  //   //     Navigator.of(ctx.context).pop(results.results);
-  //   // }
-  // });
+  Navigator.of(ctx.context)
+      .push(PageRouteBuilder(pageBuilder: (context, an, _) {
+    return FadeTransition(
+      opacity: an,
+      child: RegisterPage().buildPage(null),
+    );
+  })).then((results) {
+    if (results is PopWithResults) {
+      PopWithResults popResult = results;
+      if (popResult.toPage == 'mainpage')
+       Navigator.of(ctx.context).pushReplacement(PageRouteBuilder(
+          pageBuilder: (_, __, ___) {
+            return Routes.routes.buildPage('startpage', null);
+          },
+          settings: RouteSettings(name: 'startpage')));
+    }
+  });
 }
 
 
@@ -182,19 +181,8 @@ void _onGoogleSignIn(Action action, Context<LoginPageState> ctx) async {
     assert(user.uid == _auth.currentUser.uid);
     await user.reload();
     if (user != null) {
-      UserInfoOperate.whenLogin(_auth.currentUser, _auth.currentUser.displayName);
 
-      await Navigator.of(ctx.context).pushReplacement(PageRouteBuilder(
-          pageBuilder: (_, __, ___) {
-            return Routes.routes.buildPage('mainpage', {
-              'pages': List<Widget>.unmodifiable([
-                Routes.routes.buildPage('homePage', null),
-                Routes.routes.buildPage('discoverPage', null),
-                Routes.routes.buildPage('configPage', null)
-              ])
-            });
-          },
-          settings: RouteSettings(name: 'mainpage')));
+      _onCompleteLogin(ctx, _auth.currentUser);
 
 
 
@@ -263,28 +251,12 @@ Future<User> signInWithApple() async {
 }
 
 
-
 void _onAppleSignIn(Action action, Context<LoginPageState> ctx) async {
   ctx.state.submitAnimationController.forward();
 
   User user = await signInWithApple();
   if (user != null) {
-    UserInfoOperate.whenLogin(user, user.displayName);
-
-    await Navigator.of(ctx.context).pushReplacement(PageRouteBuilder(
-        pageBuilder: (_, __, ___) {
-          return Routes.routes.buildPage('mainpage', {
-            'pages': List<Widget>.unmodifiable([
-              Routes.routes.buildPage('homePage', null),
-              Routes.routes.buildPage('discoverPage', null),
-              Routes.routes.buildPage('configPage', null)
-            ])
-          });
-        },
-        settings: RouteSettings(name: 'mainpage')));
-
-
-
+    _onCompleteLogin(ctx, _auth.currentUser);
   } else {
     ctx.state.submitAnimationController.reverse();
     Toast.show("Google signIn fail", ctx.context,
@@ -292,3 +264,10 @@ void _onAppleSignIn(Action action, Context<LoginPageState> ctx) async {
   }
 }
 
+
+void _onCompleteLogin(Context<LoginPageState> ctx, User user) async{
+
+  UserInfoOperate.whenLogin(user, user.displayName);
+  await FirebaseServiceDados.saveUserFirebase(user);
+  await Navigator.of(ctx.context).pushReplacementNamed("mainpage");
+}

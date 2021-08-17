@@ -18,7 +18,8 @@ class MainPageState implements GlobalBaseState, Cloneable<MainPageState> {
       ..pages = pages
       ..selectedIndexPage = selectedIndexPage
       ..scaffoldKey = scaffoldKey
-      ..locale = locale;
+      ..locale = locale
+    ..user = user;
   }
 
   @override

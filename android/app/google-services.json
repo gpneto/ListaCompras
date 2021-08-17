@@ -51,6 +51,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "254669856824-dmvmcd691ihgthi38mmdjr05bms3glmp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.gpneto.listacompras",
+            "certificate_hash": "84c3cdbcaa93d33a06ecc1f2deac4e9ebfed721a"
+          }
+        },
+        {
           "client_id": "254669856824-srnemgr2d5rg1cq06a0tvl7vfehjjhu6.apps.googleusercontent.com",
           "client_type": 3
         }

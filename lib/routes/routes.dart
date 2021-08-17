@@ -2,7 +2,9 @@ import 'package:fish_redux/fish_redux.dart';
 import 'package:lista_compras/actions/adapt.dart';
 import 'package:lista_compras/globalbasestate/state.dart';
 import 'package:lista_compras/globalbasestate/store.dart';
+import 'package:lista_compras/views/add_produto/page.dart';
 import 'package:lista_compras/views/config_page/page.dart';
+import 'package:lista_compras/views/home_compras/page.dart';
 import 'package:lista_compras/views/login_page/page.dart';
 import 'package:lista_compras/views/views.dart';
 import 'package:lista_compras/widgets/menu_item.dart';
@@ -11,8 +13,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Routes {
 
+  static const list_compras = 'list_compras';
+  static const add_produto = 'add_produto';
+  static const home_exemplo = 'home_exemplo';
+
+
   static final List<ItemMenu> menuItens = [
     ItemMenu(id: "home", nome: "Home", icone: widgets.Icon(FontAwesomeIcons.home,size: Adapt.px(44)), page:Routes.routes.buildPage('homePage', null)),
+    ItemMenu(id: "home_exemplo", nome: "Home", icone: widgets.Icon(FontAwesomeIcons.home,size: Adapt.px(44)), page:Routes.routes.buildPage('home_exemplo', null)),
     ItemMenu(id:"outros", nome: "Outros", icone: widgets.Icon(FontAwesomeIcons.tasks,size: Adapt.px(44)),page:Routes.routes.buildPage('discoverPage', null)),
     ItemMenu(id: "config",nome: "Configurações", icone: widgets.Icon(FontAwesomeIcons.confluence,size: Adapt.px(44)), disable: true, page:Routes.routes.buildPage('configPage', null))];
 
@@ -20,10 +28,13 @@ class Routes {
     pages: <String, Page<Object, dynamic>>{
       'startpage': StartPage(),
       'mainpage': MainPage(),
-      'homePage': HomePage(),
+      'homePage': HomeComprasPage(),
+      'home_exemplo': HomePage(),
       'discoverPage': DiscoverPage(),
       'configPage': ConfigPage(),
       'loginPage': LoginPage(),
+      // list_compras: ListEntriesPage(),
+      add_produto: AddProdutoPage()
 
     },
     visitor: (String path, Page<Object, dynamic> page) {
